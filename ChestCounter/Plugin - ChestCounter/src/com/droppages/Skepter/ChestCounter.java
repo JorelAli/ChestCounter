@@ -20,8 +20,10 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChestCounter extends JavaPlugin implements Listener {
-
+//
 	String PERMISSION = "CC.use";
+	HashMap<Player, Block> map = new HashMap<Player, Block>();
+
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 	}
@@ -29,15 +31,13 @@ public class ChestCounter extends JavaPlugin implements Listener {
 	public void onDisable() {
 	}
 
-	HashMap<Player, Block> map = new HashMap<Player, Block>();
-	
 	@EventHandler
 	public void onClose(InventoryCloseEvent event) {
-		if(map.containsKey(event.getPlayer())) {
+		if (map.containsKey(event.getPlayer())) {
 			updateSign(map.get(event.getPlayer()));
 		}
 	}
-	
+
 	@EventHandler
 	public void onUpdateSign(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -55,7 +55,7 @@ public class ChestCounter extends JavaPlugin implements Listener {
 			return;
 		}
 	}
-	
+
 	@EventHandler
 	public void onSignPlace(SignChangeEvent event) {
 		if (event.getLine(0).equalsIgnoreCase("[CC]")
@@ -76,9 +76,9 @@ public class ChestCounter extends JavaPlugin implements Listener {
 		}
 		return b.getRelative(face);
 	}
-	
+
 	public boolean hasSignAttacked(Block block) {
-		if(block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN
+		if (block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN
 				|| block.getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN
 				|| block.getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN
 				|| block.getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN) {
@@ -87,19 +87,20 @@ public class ChestCounter extends JavaPlugin implements Listener {
 			return false;
 		}
 	}
-	
+
 	public void updateSign(Block block) {
-		ItemStack[] contents = ((Chest) block.getState()).getInventory().getContents();
+		ItemStack[] contents = ((Chest) block.getState()).getInventory()
+				.getContents();
 		int amount = 0;
-		if(contents != null) {
-			for(ItemStack itemstack : contents) {
-				if(itemstack == null) {
+		if (contents != null) {
+			for (ItemStack itemstack : contents) {
+				if (itemstack == null) {
 					continue;
 				} else {
 					amount += itemstack.getAmount();
 				}
 			}
-		}					
+		}
 		Sign sign = null;
 		Block sig = null;
 		if (block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN) {
@@ -112,19 +113,21 @@ public class ChestCounter extends JavaPlugin implements Listener {
 			sig = block.getRelative(BlockFace.EAST);
 		}
 		sign = (Sign) sig.getState();
-		if(sign.getLine(0).equalsIgnoreCase("[CC]")) {
+		if (sign.getLine(0).equalsIgnoreCase("[CC]")) {
 			if (amount < 64) {
-				sign.setLine(1, amount == 1 ? amount + " item" : amount + " items");
+				sign.setLine(1, amount == 1 ? amount + " item" : amount
+						+ " items");
 				sign.setLine(2, "0 stacks");
 				sign.setLine(3, "");
 			} else {
 				int k = amount % 64;
 				int l = amount / 64;
 				sign.setLine(1, k == 1 ? k + " item" : k + " items");
-				sign.setLine(1, k == 0 ? "0 items" : (k == 1 ? k + " item" : k + " items"));
+				sign.setLine(1, k == 0 ? "0 items" : (k == 1 ? k + " item" : k
+						+ " items"));
 				sign.setLine(2, l == 1 ? l + " stack" : l + " stacks");
 				sign.setLine(3, "");
-				if(l == 27) {
+				if (l == 27) {
 					sign.setLine(3, "Full chest!");
 				}
 			}
