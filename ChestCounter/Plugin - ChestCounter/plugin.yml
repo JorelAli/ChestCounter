@@ -1,0 +1,5 @@
+name: ChestCounter
+main: com.droppages.Skepter.ChestCounter
+author: Skepter
+version: 1.0
+description: Counts the amount of items in your chest!
