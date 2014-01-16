@@ -20,7 +20,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChestCounter extends JavaPlugin implements Listener {
-//
+
 	String PERMISSION = "CC.use";
 	HashMap<Player, Block> map = new HashMap<Player, Block>();
 
