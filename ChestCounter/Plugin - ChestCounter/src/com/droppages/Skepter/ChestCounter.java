@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -89,8 +90,15 @@ public class ChestCounter extends JavaPlugin implements Listener {
 	}
 
 	public void updateSign(Block block) {
-		ItemStack[] contents = ((Chest) block.getState()).getInventory()
-				.getContents();
+		ItemStack[] contents = null;
+		if (block.getRelative(BlockFace.NORTH).getType() == Material.CHEST
+				|| block.getRelative(BlockFace.SOUTH).getType() == Material.CHEST
+				|| block.getRelative(BlockFace.WEST).getType() == Material.CHEST
+				|| block.getRelative(BlockFace.EAST).getType() == Material.CHEST) {
+			contents = ((DoubleChest) block.getState()).getInventory().getContents();
+		} else {
+			contents = ((Chest) block.getState()).getInventory().getContents();
+		}
 		int amount = 0;
 		if (contents != null) {
 			for (ItemStack itemstack : contents) {
