@@ -92,69 +92,66 @@ public class ChestCounter extends JavaPlugin implements Listener {
 	}
 
 	public void updateSign(Block block) {
-		try {
-			boolean dChest = false;
-			ItemStack[] contents = null;
-			Inventory chestInventory = ((Chest) block.getState()).getInventory();
-			if(chestInventory instanceof DoubleChestInventory) {
-				DoubleChest c = new DoubleChest((DoubleChestInventory) chestInventory);
-				contents = c.getInventory().getContents();
-				dChest = true;
-			} else {
-				contents = chestInventory.getContents();
-			}
-			int amount = 0;
-			if (contents != null) {
-				for (ItemStack itemstack : contents) {
-					if (itemstack == null) {
-						continue;
-					} else {
-						amount += itemstack.getAmount();
-					}
-				}
-			}
-			Sign sign = null;
-			Block sig = null;
-			if (block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.NORTH);
-			} else if (block.getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.SOUTH);
-			} else if (block.getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.WEST);
-			} else if (block.getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.EAST);
-			} else if (block.getRelative(BlockFace.SOUTH_EAST).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.SOUTH_EAST);
-			} else if (block.getRelative(BlockFace.SOUTH_WEST).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.SOUTH_WEST);
-			} else if (block.getRelative(BlockFace.NORTH_EAST).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.NORTH_EAST);
-			} else if (block.getRelative(BlockFace.NORTH_WEST).getType() == Material.WALL_SIGN) {
-				sig = block.getRelative(BlockFace.NORTH_WEST);
-			}
-			sign = (Sign) sig.getState();
-			if (sign.getLine(0).equalsIgnoreCase("[CC]")) {
-				if (amount < 64) {
-					sign.setLine(1, amount == 1 ? amount + " item" : amount
-							+ " items");
-					sign.setLine(2, "0 stacks");
-					sign.setLine(3, "");
+		boolean dChest = false;
+		ItemStack[] contents = null;
+		Inventory chestInventory = ((Chest) block.getState()).getInventory();
+		if (chestInventory instanceof DoubleChestInventory) {
+			DoubleChest c = new DoubleChest(
+					(DoubleChestInventory) chestInventory);
+			contents = c.getInventory().getContents();
+			dChest = true;
+		} else {
+			contents = chestInventory.getContents();
+		}
+		int amount = 0;
+		if (contents != null) {
+			for (ItemStack itemstack : contents) {
+				if (itemstack == null) {
+					continue;
 				} else {
-					int k = amount % 64;
-					int l = amount / 64;
-					sign.setLine(1, k == 1 ? k + " item" : k + " items");
-					sign.setLine(1, k == 0 ? "0 items" : (k == 1 ? k + " item" : k
-							+ " items"));
-					sign.setLine(2, l == 1 ? l + " stack" : l + " stacks");
-					sign.setLine(3, "");
-					if ((l == 27 && dChest == false) || (l == 54 && dChest == true)) {
-						sign.setLine(3, "Full chest!");
-					}
+					amount += itemstack.getAmount();
 				}
-				sign.update(true);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+		Sign sign = null;
+		Block sig = null;
+		if (block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.NORTH);
+		} else if (block.getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.SOUTH);
+		} else if (block.getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.WEST);
+		} else if (block.getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.EAST);
+		} else if (block.getRelative(BlockFace.SOUTH_EAST).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.SOUTH_EAST);
+		} else if (block.getRelative(BlockFace.SOUTH_WEST).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.SOUTH_WEST);
+		} else if (block.getRelative(BlockFace.NORTH_EAST).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.NORTH_EAST);
+		} else if (block.getRelative(BlockFace.NORTH_WEST).getType() == Material.WALL_SIGN) {
+			sig = block.getRelative(BlockFace.NORTH_WEST);
+		}
+		sign = (Sign) sig.getState();
+		if (sign.getLine(0).equalsIgnoreCase("[CC]")) {
+			if (amount < 64) {
+				sign.setLine(1, amount == 1 ? amount + " item" : amount
+						+ " items");
+				sign.setLine(2, "0 stacks");
+				sign.setLine(3, "");
+			} else {
+				int k = amount % 64;
+				int l = amount / 64;
+				sign.setLine(1, k == 1 ? k + " item" : k + " items");
+				sign.setLine(1, k == 0 ? "0 items" : (k == 1 ? k + " item" : k
+						+ " items"));
+				sign.setLine(2, l == 1 ? l + " stack" : l + " stacks");
+				sign.setLine(3, "");
+				if ((l == 27 && dChest == false) || (l == 54 && dChest == true)) {
+					sign.setLine(3, "Full chest!");
+				}
+			}
+			sign.update(true);
 		}
 	}
 }
