@@ -66,7 +66,7 @@ public class ChestCounter extends JavaPlugin implements Listener {
 						.getPlayer().isOp())) {
 			Block chest = getAttachedBlock(event.getBlock());
 			if (chest.getType().equals(Material.CHEST)) {
-				event.getPlayer().sendMessage("[CC] Chest initialized");
+				event.getPlayer().sendMessage("§b[CC] §fChest initialized");
 			}
 		}
 	}
