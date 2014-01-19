@@ -1,7 +1,9 @@
 package com.droppages.Skepter;
 
+import java.io.IOException;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 public class ChestCounter extends JavaPlugin implements Listener {
 
@@ -28,10 +31,21 @@ public class ChestCounter extends JavaPlugin implements Listener {
 	HashMap<Player, Block> map = new HashMap<Player, Block>();
 
 	public void onEnable() {
+		saveDefaultConfig();
+		if(getConfig().getBoolean("allowMetrics")) {
+			try {
+				Metrics metrics = new Metrics(this);
+				metrics.start();
+				Bukkit.getLogger().info("[CC] Metrics loaded");
+			} catch (IOException e) {	
+				Bukkit.getLogger().info("[CC] Metrics could not be loaded");
+			}
+		}
 		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	public void onDisable() {
+		saveConfig();
 	}
 
 	@EventHandler
