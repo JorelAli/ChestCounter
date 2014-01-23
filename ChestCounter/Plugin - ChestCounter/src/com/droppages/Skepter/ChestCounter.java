@@ -27,8 +27,8 @@ import org.mcstats.Metrics;
 
 public class ChestCounter extends JavaPlugin implements Listener {
 
-	String PERMISSION = "CC.use";
-	HashMap<Player, Block> map = new HashMap<Player, Block>();
+	private final String PERMISSION = "CC.use";
+	private HashMap<String, Block> map = new HashMap<String, Block>();
 
 	public void onEnable() {
 		saveDefaultConfig();
@@ -50,8 +50,12 @@ public class ChestCounter extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onClose(InventoryCloseEvent event) {
-		if (map.containsKey(event.getPlayer())) {
-			updateSign(map.get(event.getPlayer()));
+		String name = event.getPlayer().getName();
+		int size = event.getInventory().getSize();
+		if (size == 27 || size == 54) {
+			if (map.containsKey(name)) {
+				updateSign(map.get(name));
+			}
 		}
 	}
 
@@ -59,18 +63,12 @@ public class ChestCounter extends JavaPlugin implements Listener {
 	public void onUpdateSign(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
-			if (hasSignAttacked(block)) {
+			if (hasSignAttached(block)) {
 				if (block.getState().getType() == Material.CHEST) {
-					map.put(event.getPlayer(), block);
-				} else {
-					return;
-				}
-			} else {
-				return;
-			}
-		} else {
-			return;
-		}
+					map.put(event.getPlayer().getName(), block);
+				} 
+			} 
+		} 
 	}
 
 	@EventHandler
@@ -94,15 +92,11 @@ public class ChestCounter extends JavaPlugin implements Listener {
 		return b.getRelative(face);
 	}
 
-	public boolean hasSignAttacked(Block block) {
-		if (block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN
+	public boolean hasSignAttached(Block block) {
+		return block.getRelative(BlockFace.NORTH).getType() == Material.WALL_SIGN
 				|| block.getRelative(BlockFace.SOUTH).getType() == Material.WALL_SIGN
 				|| block.getRelative(BlockFace.WEST).getType() == Material.WALL_SIGN
-				|| block.getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN) {
-			return true;
-		} else {
-			return false;
-		}
+				|| block.getRelative(BlockFace.EAST).getType() == Material.WALL_SIGN;
 	}
 
 	public void updateSign(Block block) {
